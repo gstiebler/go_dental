@@ -5,12 +5,27 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "outDir": "./out",
-    "allowJs": true
+    "allowJs": true,
+    "jsx": "react",
+    "experimentalDecorators": true,
+    "lib": [
+      "es5",
+      "es6",
+      "dom",
+      "es2015.core",
+      "es2015.collection",
+      "es2015.generator",
+      "es2015.iterable",
+      "es2015.promise",
+      "es2015.proxy",
+      "es2015.reflect",
+      "es2015.symbol",
+      "es2015.symbol.wellknown",
+      "esnext.asynciterable"
+    ]
   },
-  "exclude": [
-    "node_modules",
-    "typings/browser.d.ts",
-    "typings/browser",
-    "out"
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ]
 }

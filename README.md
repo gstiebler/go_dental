@@ -7,18 +7,29 @@
 * Express
 * GraphQL
 * MongoDB/Mongoose
+* Gulp
 * React
-* React-Router
 * MobX (yes, there's life outside React/Redux)
+* mobx-router
 * Chai
 * Mocha
 * Bootstrap
 * Docker
-* Gulp
-* Passport (?)
 
 ### Features
 
 * Automated tests on MobX without mocks
 * Seeds and fixtures
-* Login (?)
+
+### Steps to run
+
+It is necessary to have MongoDB running to properly run the server
+
+`yarn`
+`gulp bundle:webapp`
+`gulp start:server`
+
+### Running on production
+
+Remove `.env` from the repository
+Add `uglify`

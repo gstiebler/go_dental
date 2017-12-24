@@ -1,0 +1,31 @@
+FROM node:carbon
+
+# Update
+RUN apt-get update -y
+
+# Install apt-transport-https for Yarn repository
+RUN apt-get install apt-transport-https -y
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# Update
+RUN apt-get update -y
+
+RUN apt-get install yarn
+
+WORKDIR /usr/src
+RUN git clone https://github.com/gstiebler/yabp.git
+
+WORKDIR /usr/src/yabp
+
+# used for caching packages
+RUN yarn
+RUN yarn global add typescript
+
+CMD echo 'teste'
+CMD git pull
+RUN yarn
+
+CMD node ./node_modules/gulp/bin/gulp.js bundle:webapp
+CMD node ./node_modules/gulp/bin/gulp.js start:server
