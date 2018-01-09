@@ -70,7 +70,6 @@ gulp.task("bundle:webapp", ['transpile'], function () {
 
 gulp.task('start:server', ['transpile'], function () {
   const startServer = require('./out/server/startServer').default;
-  console.log(startServer);
   return startServer();
 });
 

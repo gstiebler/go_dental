@@ -25,9 +25,12 @@
 
 It is necessary to have MongoDB running to properly run the server
 
-`yarn`
-`gulp bundle:webapp`
-`gulp start:server`
+```
+yarn
+gulp db:seed
+gulp bundle:webapp
+gulp start:server
+```
 
 ### Running on production
 

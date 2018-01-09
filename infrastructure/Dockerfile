@@ -23,9 +23,5 @@ WORKDIR /usr/src/yabp
 RUN yarn
 RUN yarn global add typescript
 
-CMD echo 'teste'
-CMD git pull
-RUN yarn
-
-CMD node ./node_modules/gulp/bin/gulp.js bundle:webapp
-CMD node ./node_modules/gulp/bin/gulp.js start:server
+WORKDIR /usr/src/yabp/infrastructure
+CMD ./startServer.sh
