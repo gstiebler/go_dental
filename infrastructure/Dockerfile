@@ -15,13 +15,13 @@ RUN apt-get update -y
 RUN apt-get install yarn
 
 WORKDIR /usr/src
-RUN git clone https://github.com/gstiebler/yabp.git
+RUN git clone https://<github_oauth>@github.com/gstiebler/go_dental.git
 
-WORKDIR /usr/src/yabp
+WORKDIR /usr/src/go_dental
 
 # used for caching packages
 RUN yarn
 RUN yarn global add typescript
 
-WORKDIR /usr/src/yabp/infrastructure
+WORKDIR /usr/src/go_dental/infrastructure
 CMD ./startServer.sh
