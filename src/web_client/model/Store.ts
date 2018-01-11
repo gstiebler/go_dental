@@ -1,7 +1,6 @@
 
 import { observable } from 'mobx';
 import 'whatwg-fetch';
-import { RouterStore } from 'mobx-router';
 
 interface Bunny {
   _id: string;
@@ -9,16 +8,22 @@ interface Bunny {
   count: number;
 }
 
+interface ProductTypeahead {
+  _id: string;
+  name: string;
+}
+
 export class Store {
 
   fetchQuery: (query: string) => Promise<any>;
+  @observable router;
   @observable bunnies: Array<Bunny> = [];
   @observable selectedBunny: Bunny;
-  @observable router: RouterStore;
+  @observable productTypeaheadSrc: Array<ProductTypeahead> = [];
 
-  constructor(fetchQueryFn: (query: string) => Promise<any>) {
+  constructor(fetchQueryFn: (query: string) => Promise<any>, routerStore) {
     this.fetchQuery = fetchQueryFn;
-    this.router = new RouterStore();
+    this.router = new routerStore();
   }
 
   async loadBunnies() {
@@ -31,6 +36,19 @@ export class Store {
     const queryBunny = `query { bunny(id: "${id}") { _id, name, count } }`;
     const res = await this.fetchQuery(queryBunny);
     this.selectedBunny = res.bunny;
+  }
+
+  async loadTypeaheadProducts(partialName: string) {
+    const query = `
+      query {
+        productsTypeahead(partialName: "${partialName}") {
+          _id,
+          name
+        }
+      }
+    `;
+    const res = await this.fetchQuery(query);
+    this.productTypeaheadSrc = res.productsTypeahead;
   }
 
 }
@@ -56,4 +74,8 @@ async function fetchQuery(query: String): Promise<any> {
   }
 }
 
-export let store = new Store(fetchQuery);
+export let store;
+
+export function initStore(routerStore) {
+  store = new Store(fetchQuery, routerStore);
+}

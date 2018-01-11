@@ -4,7 +4,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { bunnyQuery } from './ProductGQL';
+import * as ProductGQL from './ProductGQL';
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -16,7 +16,7 @@ export const schema = new GraphQLSchema({
           return 'world';
         },
       },
-      ...bunnyQuery,
+      ...ProductGQL.query,
     },
   }),
 });

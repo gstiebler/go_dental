@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 const dentalSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, index: true },
   address: { type: String, required: true },
   dateAdded: { type: Date, required: true, default: new Date() },
 });

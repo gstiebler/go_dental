@@ -6,6 +6,7 @@ import { execGQLQuery } from '../../server/graphql/graphql_controller';
 import { Store } from '../../web_client/model/Store';
 
 const queryFn = async (query: string) => (await execGQLQuery(query)).data;
+const constructorFn = function () { return 0; };
 
 describe('first', () => {
 
@@ -28,14 +29,14 @@ describe('first', () => {
   });
 
   it('model', async () => {
-    const store = new Store(queryFn);
+    const store = new Store(queryFn, constructorFn);
     await store.loadBunnies();
     expect(store.bunnies).to.have.lengthOf(2);
     expect(store.bunnies[0].name).to.equal('bunny 1');
   });
 
   it('one bunny', async () => {
-    const store = new Store(queryFn);
+    const store = new Store(queryFn, constructorFn);
     await store.loadBunnies();
     const id = store.bunnies[0]._id;
     await store.loadBunny(id);
