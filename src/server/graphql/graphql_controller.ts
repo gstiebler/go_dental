@@ -4,7 +4,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { bunnyQuery } from './BunnyGraphQL';
+import { bunnyQuery } from './ProductGQL';
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({

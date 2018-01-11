@@ -7,7 +7,7 @@ import {
   GraphQLList,
   GraphQLFloat,
 } from 'graphql';
-import { Bunny } from '../db/schemas/Bunny';
+import { Product } from '../db/schemas/Product';
 
 export function getProjection (fieldASTs) {
   return fieldASTs.fieldNodes[0].selectionSet.selections.reduce((projections, selection) => {
@@ -18,12 +18,12 @@ export function getProjection (fieldASTs) {
 
 function bunnies(root, {}, source, fieldASTs) {
   const projection = getProjection(fieldASTs);
-  return Bunny.find({}, projection);
+  return Product.find({}, projection);
 }
 
 function getOneBunny(root, { id }, source, fieldASTs) {
   const projection = getProjection(fieldASTs);
-  return Bunny.findOne({ _id: id }, projection);
+  return Product.findOne({ _id: id }, projection);
 }
 
 const bunnyType = new GraphQLObjectType({
