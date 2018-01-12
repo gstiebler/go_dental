@@ -6,6 +6,16 @@ import { RouterStore } from 'mobx-router';
 import { MobxRouter, startRouter } from 'mobx-router';
 import views from './model/Views';
 import Navbar from './components/Navbar';
+import Button from 'material-ui/Button';
+import { MuiThemeProvider } from 'material-ui/styles';
+import { createMuiTheme } from 'material-ui/styles';
+import {red} from 'material-ui/colors';
+
+export const theme = createMuiTheme({
+  palette: {
+    error: red,
+  },
+});
 
 initStore(RouterStore);
 startRouter(views, store);
@@ -13,9 +23,14 @@ startRouter(views, store);
 ReactDOM.render(
   <div>
     <Navbar />
-    <div style={{ maxWidth: 1000, margin: 'auto' }}>
+    <div style={{ maxWidth: 800, margin: 'auto' }}>
       <Provider store={store}>
-        <MobxRouter/>
+        <MuiThemeProvider theme={theme}>
+          <MobxRouter/>
+          <Button raised color="primary">
+            Hello World
+          </Button>
+        </MuiThemeProvider>
       </Provider>
     </div>
   </div>,

@@ -1,26 +1,40 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Store, store } from '../model/Store';
-import { Link } from 'mobx-router';
 import views from '../model/Views';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
+import { withStyles } from 'material-ui/styles';
+
+const styles = {
+  root: {
+    width: '100%',
+  },
+  flex: {
+    flex: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+};
 
 function Navbar(props) {
+  const { classes } = props;
   return (
-    <nav className='navbar navbar-default'>
-      <div className='container-fluid'>
-        <div className='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
-          <ul className='nav navbar-nav'>
-            <li><Link view={views.bunnies} store={store}>Bunnies</Link></li>
-            <li><Link view={views.home} store={store}>Home</Link></li>
-          </ul>
-          <ul className='nav navbar-nav navbar-right'>
-            <p className='navbar-text'>Logged in as {'teste'}</p>
-            <li><Link to='/admin/change_password'>Change password</Link></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <div className={classes.root}>
+      <AppBar position="static" color="default">
+        <Toolbar>
+          <Typography type="title" color="inherit">
+            GoDental
+          </Typography>
+          <Button onClick={ store.router.goTo(views.home) }>Home</Button>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 }
 
-export default observer(Navbar);
+export default observer(withStyles(styles)(Navbar));
