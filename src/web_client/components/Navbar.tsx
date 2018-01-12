@@ -7,6 +7,8 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
+import { Link } from 'mobx-router';
+
 
 const styles = {
   root: {
@@ -30,7 +32,10 @@ function Navbar(props) {
           <Typography type="title" color="inherit">
             GoDental
           </Typography>
-          <Button onClick={ store.router.goTo(views.home) }>Home</Button>
+          <Button onClick={ () => { store.router.goTo(views.home); } }>Home</Button>
+          <Button>
+            <Link view={views.search} store={store}>Search</Link>
+          </Button>
         </Toolbar>
       </AppBar>
     </div>

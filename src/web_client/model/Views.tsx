@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { MobxRouter, Route, RouterStore } from 'mobx-router';
-import BunniesView from '../components/Bunnies';
-import OneBunnyView from '../components/OneBunny';
 import HelloComponent from '../components/Hello';
+import SearchProducts from '../components/SearchProducts';
 import { store } from './Store';
 
 export default {
@@ -10,18 +9,11 @@ export default {
     path: '/',
     component: <HelloComponent store={store}/>,
   }),
-  bunnies: new Route({
-    path: '/bunnies',
-    beforeEnter: () => {
+  search: new Route({
+    path: '/search',
+    /*beforeEnter: () => {
       store.loadBunnies();
-    },
-    component: <BunniesView store={store}/>,
-  }),
-  selectedBunny: new Route({
-    path: '/selected_bunny/:id',
-    onEnter: (route, params, recStore, queryParams) => {
-      store.loadBunny(params.id);
-    },
-    component: <OneBunnyView store={store}/>,
+    },*/
+    component: <SearchProducts store={store}/>,
   }),
 };

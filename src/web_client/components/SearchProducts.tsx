@@ -5,20 +5,13 @@ import { Store, store } from '../model/Store';
 interface IProps {
   store: Store;
 }
-/*
-function BunniesView(props: IProps) {
-  const bunniesHTML = props.store.bunnies.map(b => {
-    return <li><Link view={views.selectedBunny} params={{id: b._id}} store={store}>{ b.name }</Link> - { b.count }</li>;
-  });
 
+function SearchProducts(props: IProps) {
   return (
     <div>
-      <ul>
-        { bunniesHTML }
-      </ul>
+      Busca aqui
     </div>
   );
 }
 
-export default observer(BunniesView);
-*/
+export default observer(SearchProducts);

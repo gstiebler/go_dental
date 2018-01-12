@@ -9,7 +9,8 @@ import Navbar from './components/Navbar';
 import Button from 'material-ui/Button';
 import { MuiThemeProvider } from 'material-ui/styles';
 import { createMuiTheme } from 'material-ui/styles';
-import {red} from 'material-ui/colors';
+import { red } from 'material-ui/colors';
+import DevTools from 'mobx-react-devtools';
 
 export const theme = createMuiTheme({
   palette: {
@@ -32,6 +33,7 @@ ReactDOM.render(
           </Button>
         </MuiThemeProvider>
       </Provider>
+      <DevTools />
     </div>
   </div>,
   document.getElementById('root')
