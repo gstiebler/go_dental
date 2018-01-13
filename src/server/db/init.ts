@@ -8,7 +8,7 @@ export async function init({
       dbName,
       port,
     }) {
-  mongoURL = `mongodb://${dbHost}:${port}`;
+  mongoURL = `mongodb://${dbHost}:${port}/${dbName}`;
   console.log('MongoDB URI: ' + mongoURL);
   (<any>mongoose).Promise = global.Promise;
 

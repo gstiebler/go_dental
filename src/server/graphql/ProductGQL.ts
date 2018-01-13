@@ -14,6 +14,9 @@ const productTypeaheadType = new GraphQLObjectType({
   fields: {
     _id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) },
+    code: { type: new GraphQLNonNull(GraphQLString) },
+    description: { type: GraphQLString },
+    imageURL: { type: GraphQLString },
   },
 });
 

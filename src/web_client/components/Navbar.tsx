@@ -33,9 +33,7 @@ function Navbar(props) {
             GoDental
           </Typography>
           <Button onClick={ () => { store.router.goTo(views.home); } }>Home</Button>
-          <Button>
-            <Link view={views.search} store={store}>Search</Link>
-          </Button>
+          <Button onClick={ () => { store.router.goTo(views.search); } }>Search</Button>
         </Toolbar>
       </AppBar>
     </div>

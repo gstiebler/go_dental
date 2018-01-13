@@ -90,4 +90,6 @@ process.on('uncaughtException', (err) => {
   winston.error(err.stack);
 });
 
+console.log('App initialized');
+
 export default app;

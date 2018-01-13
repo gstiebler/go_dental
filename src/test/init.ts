@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import * as winston from 'winston';
 import * as dotenv from 'dotenv';
 import * as http from 'http';
-import app from '../server/app';
+// import app from '../server/app';
 import { db } from '../server/db/init';
 import { execGQLQuery } from '../server/graphql/graphql_controller';
 
@@ -22,6 +22,7 @@ after((done) => {
   mongoose.disconnect(done);
 });
 
+/*
 export async function createServer(): Promise<http.Server> {
   const server = http.createServer(app);
   server.listen(process.env.SERVER_PORT);
@@ -30,6 +31,7 @@ export async function createServer(): Promise<http.Server> {
   });
   return server;
 }
+*/
 
 export async function queryFn(query: string) {
   try {
