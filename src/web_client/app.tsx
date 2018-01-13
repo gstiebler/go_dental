@@ -26,9 +26,9 @@ startRouter(views, store);
 ReactDOM.render(
   <div>
     <Navbar store={store} />
-    <Grid container justify="center" spacing={16}>
+    <Grid container justify='center' spacing={16}>
       <Grid item>
-        <div style={{ maxWidth: 800 }}>
+        <div style={{ width: 800 }}>
           <Provider store={store}>
             <MuiThemeProvider theme={theme}>
               <MobxRouter/>

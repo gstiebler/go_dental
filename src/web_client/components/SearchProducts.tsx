@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { Store } from '../model/Store';
 import ProductCard from './ProductCard';
 import TextField from 'material-ui/TextField';
+import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
@@ -18,6 +19,8 @@ interface IProps {
   classes?: any;
 }
 
+const SPACING = 16;
+
 @observer
 class SearchProducts extends React.Component<IProps> {
   render() {
@@ -32,7 +35,13 @@ class SearchProducts extends React.Component<IProps> {
             onChange={store.onSearchValueChange.bind(store)}
             margin='normal'
         />
-        { store.productsFromSearch.map(product => <ProductCard product={ product } goTo={ goTo } />) }
+        <Grid container justify='flex-start' spacing={SPACING} >
+          { store.productsFromSearch.map(product => (
+            <Grid key={product.code} item>
+              <ProductCard product={ product } goTo={ goTo } />
+            </Grid>
+          ))}
+        </Grid>
       </div>
     );
   }
