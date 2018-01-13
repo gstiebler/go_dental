@@ -11,8 +11,8 @@ describe('product', () => {
   });
 
   it('typeahead', async () => {
-    const store = new Store(queryFn, constructorFn);
-    await store.loadTypeaheadProducts('broca');
+    const store = new Store(queryFn);
+    await store._loadTypeaheadProducts('broca');
     expect(store.productsFromSearch[0].name).to.be.equal('Broca grande');
     expect(store.productsFromSearch[1].name).to.be.equal('Broca média');
     expect(store.productsFromSearch[2].name).to.be.equal('Broca pequena');

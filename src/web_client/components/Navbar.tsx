@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { Store, store } from '../model/Store';
+import { Store } from '../model/Store';
 import views from '../model/Views';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -24,7 +24,7 @@ const styles = {
 };
 
 function Navbar(props) {
-  const { classes } = props;
+  const { store, classes } = props;
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
@@ -32,8 +32,11 @@ function Navbar(props) {
           <Typography type="title" color="inherit">
             GoDental
           </Typography>
-          <Button onClick={ () => { store.router.goTo(views.home); } }>Home</Button>
-          <Button onClick={ () => { store.router.goTo(views.search); } }>Search</Button>
+          <Button onClick={ () => { store.router.goTo(views.home, {}, store); } }>Home</Button>
+          <Button>
+            <Link view={views.search} store={store}>Search</Link>
+          </Button>
+
         </Toolbar>
       </AppBar>
     </div>

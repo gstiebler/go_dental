@@ -15,13 +15,13 @@ export class Store {
   fetchQuery: (query: string) => Promise<any>;
   @observable router;
   @observable productsFromSearch: Array<Product> = [];
+  @observable counter: number = 0;
 
-  constructor(fetchQueryFn: (query: string) => Promise<any>, routerStore) {
+  constructor(fetchQueryFn: (query: string) => Promise<any>) {
     this.fetchQuery = fetchQueryFn;
-    this.router = new routerStore();
   }
 
-  async loadTypeaheadProducts(partialName: string) {
+  async _loadTypeaheadProducts(partialName: string) {
     const query = `
       query {
         productsTypeahead(partialName: "${partialName}") {
@@ -35,6 +35,11 @@ export class Store {
     `;
     const res = await this.fetchQuery(query);
     this.productsFromSearch = res.productsTypeahead;
+  }
+
+  onSearchValueChange(event) {
+    this.counter += 1;
+    this._loadTypeaheadProducts(event.target.value);
   }
 
 }
@@ -60,8 +65,4 @@ async function fetchQuery(query: String): Promise<any> {
   }
 }
 
-export let store;
-
-export function initStore(routerStore) {
-  store = new Store(fetchQuery, routerStore);
-}
+export let store = new Store(fetchQuery);

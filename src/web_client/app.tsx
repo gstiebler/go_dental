@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { store, initStore } from './model/Store';
+import { store } from './model/Store';
 import { Provider } from 'mobx-react';
 import { RouterStore } from 'mobx-router';
 import { MobxRouter, startRouter } from 'mobx-router';
@@ -11,6 +11,7 @@ import { MuiThemeProvider } from 'material-ui/styles';
 import { createMuiTheme } from 'material-ui/styles';
 import { red } from 'material-ui/colors';
 import DevTools from 'mobx-react-devtools';
+import Grid from 'material-ui/Grid';
 
 export const theme = createMuiTheme({
   palette: {
@@ -18,23 +19,25 @@ export const theme = createMuiTheme({
   },
 });
 
-initStore(RouterStore);
+
+store.router = new RouterStore();
 startRouter(views, store);
 
 ReactDOM.render(
   <div>
-    <Navbar />
-    <div style={{ maxWidth: 800, margin: 'auto' }}>
-      <Provider store={store}>
-        <MuiThemeProvider theme={theme}>
-          <MobxRouter/>
-          <Button raised color="primary">
-            Hello World
-          </Button>
-        </MuiThemeProvider>
-      </Provider>
-      <DevTools />
-    </div>
+    <Navbar store={store} />
+    <Grid container justify="center" spacing={16}>
+      <Grid item>
+        <div style={{ maxWidth: 800 }}>
+          <Provider store={store}>
+            <MuiThemeProvider theme={theme}>
+              <MobxRouter/>
+            </MuiThemeProvider>
+          </Provider>
+          <DevTools />
+        </div>
+      </Grid>
+    </Grid>
   </div>,
   document.getElementById('root')
 );

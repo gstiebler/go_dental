@@ -31,4 +31,4 @@ export default async ():Promise<Array<any>> => {
       imageURL: 'http://redeconstruirsp.com.br/4525-4440-thickbox/BROCA-PILOTO-1-4--P--SERRA-COPO-DENTE-DE-METAL.jpg',
     },
   ];
-}
+};
