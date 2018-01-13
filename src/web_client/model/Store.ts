@@ -3,7 +3,7 @@ import { observable } from 'mobx';
 import 'whatwg-fetch';
 import { setTimeout } from 'timers';
 
-interface Product {
+export interface Product {
   _id: string;
   name: string;
   code: string;
