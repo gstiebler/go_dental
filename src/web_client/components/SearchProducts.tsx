@@ -17,22 +17,25 @@ interface IProps {
   classes?: any;
 }
 
-function SearchProducts(props: IProps) {
-  const { store, classes } = props;
-  console.log('render2: ', JSON.stringify(store.counter));
-  console.log('render: ', JSON.stringify(store.productsFromSearch));
-  return (
-    <div>
-      <TextField
-          id='search'
-          label='Busca'
-          className={classes.textField}
-          onChange={store.onSearchValueChange.bind(store)}
-          margin='normal'
-        />
-      { store.productsFromSearch.map(p => <span> { p.name } - { p.description } </span>) }
-    </div>
-  );
+@observer
+class SearchProducts extends React.Component<IProps> {
+  render() {
+    const { store, classes } = this.props;
+    return (
+      <div>
+        <TextField
+            id='search'
+            label='Busca'
+            className={classes.textField}
+            onChange={store.onSearchValueChange.bind(store)}
+            margin='normal'
+          />
+        { store.productsFromSearch.map(p => <div><br /><span> { p.name } - { p.description } </span></div> ) }
+      </div>
+    );
+  }
 }
 
-export default observer(withStyles(styles)(SearchProducts));
+const temp = (props: IProps) => <SearchProducts {...props} />;
+
+export default withStyles(styles)(temp);

@@ -1,6 +1,7 @@
 
 import { observable } from 'mobx';
 import 'whatwg-fetch';
+import { setTimeout } from 'timers';
 
 interface Product {
   _id: string;
@@ -16,30 +17,37 @@ export class Store {
   @observable router;
   @observable productsFromSearch: Array<Product> = [];
   @observable counter: number = 0;
+  searchTimeout: any;
 
   constructor(fetchQueryFn: (query: string) => Promise<any>) {
     this.fetchQuery = fetchQueryFn;
   }
 
   async _loadTypeaheadProducts(partialName: string) {
-    const query = `
-      query {
-        productsTypeahead(partialName: "${partialName}") {
-          _id,
-          name,
-          description,
-          code,
-          imageURL
+    if (partialName === '') {
+      this.productsFromSearch = [];
+    } else {
+      const query = `
+        query {
+          productsTypeahead(partialName: "${partialName}") {
+            _id,
+            name,
+            description,
+            code,
+            imageURL
+          }
         }
-      }
-    `;
-    const res = await this.fetchQuery(query);
-    this.productsFromSearch = res.productsTypeahead;
+      `;
+      const res = await this.fetchQuery(query);
+      this.productsFromSearch = res.productsTypeahead;
+    }
   }
 
   onSearchValueChange(event) {
-    this.counter += 1;
-    this._loadTypeaheadProducts(event.target.value);
+    const TIMEOUT = 400;
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout =
+      setTimeout(this._loadTypeaheadProducts.bind(this, event.target.value), TIMEOUT);
   }
 
 }
