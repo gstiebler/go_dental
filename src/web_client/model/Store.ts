@@ -2,13 +2,19 @@
 import { observable } from 'mobx';
 import 'whatwg-fetch';
 import { setTimeout } from 'timers';
+import { computed } from 'mobx';
 
 export interface Product {
   _id: string;
   name: string;
   code: string;
-  description: number;
-  imageURL: string;
+  description?: number;
+  imageURL?: string;
+}
+
+interface ProductCount {
+  count: number;
+  product: Product;
 }
 
 export class Store {
@@ -16,11 +22,13 @@ export class Store {
   fetchQuery: (query: string) => Promise<any>;
   @observable router;
   @observable productsFromSearch: Array<Product> = [];
-  @observable counter: number = 0;
+  @observable cart: Map<string, ProductCount>;
+  selectedProduct: Product;
   searchTimeout: any;
 
   constructor(fetchQueryFn: (query: string) => Promise<any>) {
     this.fetchQuery = fetchQueryFn;
+    this.cart = new Map();
   }
 
   async _loadTypeaheadProducts(partialName: string) {
@@ -43,11 +51,31 @@ export class Store {
     }
   }
 
+  getProductCount(productId: string): number {
+    const productCount = this.cart.get(productId);
+    return productCount ? productCount.count : 0;
+  }
+
+  @computed
+  get getCartAsArray(): ProductCount[] {
+    return Array.from(this.cart.values());
+  }
+
   onSearchValueChange(event) {
     const TIMEOUT = 400;
     clearTimeout(this.searchTimeout);
     this.searchTimeout =
       setTimeout(this._loadTypeaheadProducts.bind(this, event.target.value), TIMEOUT);
+  }
+
+  onProductSelected(selectedProduct) {
+    this.selectedProduct = selectedProduct;
+  }
+
+  onProductCountChanged(product: Product, count: number) {
+    const productCount = this.cart.get(product._id) || { product, count };
+    productCount.count = count;
+    this.cart.set(product._id, productCount);
   }
 
 }
