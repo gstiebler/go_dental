@@ -32,12 +32,34 @@ async function _loadStock(productIds: string[], fetchQueryFn): Promise<StockInfo
       }
     }
   `;
-  return await fetchQueryFn(query);
+  const res = await fetchQueryFn(query);
+  return res.stockMatrix;
 }
 
-/*function _genStockMatrix(stock) {
+function _genStockMatrix(stock: StockInfo) {
+  const stockMap: Map<string, number> = new Map();
+  for (const stockItem of stock.stockItems) {
+    const mapKey = `${stockItem.dental}-${stockItem.product}`;
+    stockMap.set(mapKey, stockItem.price);
+  }
+  const products = stock.products.map((product) => {
+    const productPrices = stock.dentals.map((dental) => {
+      const id = `${dental._id}-${product._id}`;
+      return stockMap.get(id);
+    });
 
-}*/
+    return {
+      id: product._id,
+      name: product.name,
+      productPrices,
+    };
+  });
+
+  return {
+    dentals: stock.dentals,
+    products,
+  };
+}
 
 export class Store {
 
@@ -45,6 +67,7 @@ export class Store {
   @observable router;
   @observable productsFromSearch: Array<Product> = [];
   @observable cart: Map<string, ProductCount>;
+  stockMatrix: any;
   selectedProduct: Product;
   searchTimeout: any;
 
@@ -128,7 +151,7 @@ export class Store {
   async onMatrixPageDisplay() {
     const productIds = this.getCartAsArray.map(pc => pc.product._id);
     const stock = await _loadStock(productIds, this.fetchQuery);
-    console.log(JSON.stringify(stock, null, 2));
+    this.stockMatrix = _genStockMatrix(stock);
   }
 
 }

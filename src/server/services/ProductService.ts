@@ -36,10 +36,4 @@ export async function getStockMatrix(root, { productIds }) {
     dentals,
     stockItems,
   };
-  /*
-  let stockMap = new Map();
-  for (const stockItem in stocks) {
-    stockMap.set(`${}-${}`, stockItem);
-  }
-  */
 }

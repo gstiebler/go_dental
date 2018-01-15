@@ -53,7 +53,8 @@ describe('product', () => {
     store.onProductCountChanged(store.productsFromSearch[1], 5);
     store.onProductCountChanged(store.productsFromSearch[2], 7);
 
-    store.onMatrixPageDisplay();
+    await store.onMatrixPageDisplay();
+    console.log(JSON.stringify(store.stockMatrix, null, 2));
   });
 
 });
