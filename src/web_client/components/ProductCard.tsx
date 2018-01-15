@@ -4,7 +4,7 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import { withStyles } from 'material-ui/styles';
-import { Product } from '../model/Store';
+import { Product } from '../../common/Interfaces';
 
 const styles = {
   card: {

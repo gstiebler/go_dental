@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import { constructorFn, queryFn } from './init';
 import { initFixtures } from './fixtures/init';
 import { execGQLQuery } from '../server/graphql/graphql_controller';
-import { Store, Product } from '../web_client/model/Store';
+import { Product } from '../common/Interfaces';
+import { Store } from '../web_client/model/Store';
 
 describe('product', () => {
 
@@ -43,7 +44,16 @@ describe('product', () => {
         },
       ]
     );
+  });
 
+  it('stock matrix', async () => {
+    const store = new Store(queryFn);
+    await store._loadTypeaheadProducts('broca');
+    store.onProductCountChanged(store.productsFromSearch[0], 3);
+    store.onProductCountChanged(store.productsFromSearch[1], 5);
+    store.onProductCountChanged(store.productsFromSearch[2], 7);
+
+    store.onMatrixPageDisplay();
   });
 
 });
