@@ -3,13 +3,41 @@ import { observable } from 'mobx';
 import 'whatwg-fetch';
 import { setTimeout } from 'timers';
 import { computed } from 'mobx';
-import { Product } from '../../common/Interfaces';
+import { Product, StockInfo } from '../../common/Interfaces';
 
 
 interface ProductCount {
   count: number;
   product: Product;
 }
+
+async function _loadStock(productIds: string[], fetchQueryFn): Promise<StockInfo> {
+  const formattedProductIds = productIds.map(pId => `"${pId}"`);
+  const query = `
+    query {
+      stockMatrix(productIds: [${formattedProductIds.join(', ')}]) {
+        stockItems {
+          product,
+          dental,
+          price
+        },
+        products {
+          _id,
+          name
+        },
+        dentals {
+          _id,
+          name
+        }
+      }
+    }
+  `;
+  return await fetchQueryFn(query);
+}
+
+/*function _genStockMatrix(stock) {
+
+}*/
 
 export class Store {
 
@@ -97,8 +125,10 @@ export class Store {
     this.cart.set(product._id, productCount);
   }
 
-  onMatrixPageDisplay() {
-    this._loadStockMatrix();
+  async onMatrixPageDisplay() {
+    const productIds = this.getCartAsArray.map(pc => pc.product._id);
+    const stock = await _loadStock(productIds, this.fetchQuery);
+    console.log(JSON.stringify(stock, null, 2));
   }
 
 }

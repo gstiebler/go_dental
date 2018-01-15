@@ -12,10 +12,18 @@ interface Dental {
   name: string;
 }
 
-interface StockMatrix {
-  products: Product[];
-  dentals: Dental[];
-  dentalStocks: [{
-    productStocks: number[];
+interface StockInfo {
+  products: [{
+    _id: string;
+    name: string;
+  }];
+  dentals: [{
+    _id: string;
+    name: string;
+  }];
+  stockItems: [{
+    product: string;
+    dental: string;
+    price: number;
   }];
 }
