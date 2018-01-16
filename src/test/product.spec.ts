@@ -54,7 +54,11 @@ describe('product', () => {
     store.onProductCountChanged(store.productsFromSearch[2], 7);
 
     await store.onMatrixPageDisplay();
-    console.log(JSON.stringify(store.stockMatrix, null, 2));
+    expect(store.stockMatrix.products).to.have.lengthOf(3);
+    expect(store.stockMatrix.products[0].name).to.equal('Broca grande');
+    expect(store.stockMatrix.products[1].name).to.equal('Broca média');
+    expect(store.stockMatrix.products[2].name).to.equal('Broca pequena');
+    expect(store.stockMatrix.products[2].productPrices).to.eql([500, 1000, 2000]);
   });
 
 });
