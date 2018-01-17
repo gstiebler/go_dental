@@ -6,11 +6,15 @@ import * as http from 'http';
 // import app from '../server/app';
 import { db } from '../server/db/init';
 import { execGQLQuery } from '../server/graphql/graphql_controller';
+import * as sinon from 'sinon';
+const network = require('../web_client/lib/network');
 
 // load environment variables from .env file in the root of the project (where package.json is)
 dotenv.config();
 
+let fetchStub;
 before(async () => {
+  fetchStub = sinon.stub(network, 'fetchQuery', queryFn);
   await MongoInit.init({
     dbHost: process.env.MONGODB_HOST,
     dbName: process.env.MONGODB_TEST_DB_NAME,
@@ -20,6 +24,7 @@ before(async () => {
 
 after((done) => {
   mongoose.disconnect(done);
+  fetchStub.restore();
 });
 
 /*
@@ -33,7 +38,7 @@ export async function createServer(): Promise<http.Server> {
 }
 */
 
-export async function queryFn(query: string) {
+async function queryFn(query: string) {
   try {
     const res = await execGQLQuery(query);
     if (res.data) {
@@ -45,5 +50,3 @@ export async function queryFn(query: string) {
     console.error(error);
   }
 }
-
-export const constructorFn = function () { return 0; };

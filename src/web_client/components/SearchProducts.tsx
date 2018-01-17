@@ -21,6 +21,16 @@ interface IProps {
 
 const SPACING = 16;
 
+let timeoutRef;
+function onSearchValueChange(store: Store, partialName: string) {
+  const TIMEOUT = 400;
+  clearTimeout(timeoutRef);
+  timeoutRef =
+    setTimeout(() => {
+      store.onSearchValueChange(partialName);
+    }, TIMEOUT);
+}
+
 @observer
 class SearchProducts extends React.Component<IProps> {
   render() {
@@ -32,7 +42,7 @@ class SearchProducts extends React.Component<IProps> {
             id='search'
             label='Busca'
             className={classes.textField}
-            onChange={store.onSearchValueChange.bind(store)}
+            onChange={event => onSearchValueChange(store, event.target.value)}
             margin='normal'
         />
         <Grid container justify='flex-start' spacing={SPACING} >

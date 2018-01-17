@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { constructorFn, queryFn } from './init';
 import { initFixtures } from './fixtures/init';
 import { execGQLQuery } from '../server/graphql/graphql_controller';
 import { Product } from '../common/Interfaces';
@@ -12,8 +11,8 @@ describe('product', () => {
   });
 
   it('typeahead', async () => {
-    const store = new Store(queryFn);
-    await store._loadTypeaheadProducts('broca');
+    const store = new Store();
+    await store.onSearchValueChange('broca');
     expect(store.productsFromSearch[0].name).to.be.equal('Broca grande');
     expect(store.productsFromSearch[1].name).to.be.equal('Broca média');
     expect(store.productsFromSearch[2].name).to.be.equal('Broca pequena');
@@ -23,7 +22,7 @@ describe('product', () => {
   });
 
   it('product count', async () => {
-    const store = new Store(queryFn);
+    const store = new Store();
     const product:Product = {
       _id: 'id1',
       name: 'nomeProd1',
@@ -42,13 +41,13 @@ describe('product', () => {
           },
           count: 3,
         },
-      ]
+      ],
     );
   });
 
   it('stock matrix', async () => {
-    const store = new Store(queryFn);
-    await store._loadTypeaheadProducts('broca');
+    const store = new Store();
+    await store.onSearchValueChange('broca');
     store.onProductCountChanged(store.productsFromSearch[0], 3);
     store.onProductCountChanged(store.productsFromSearch[1], 5);
     store.onProductCountChanged(store.productsFromSearch[2], 7);

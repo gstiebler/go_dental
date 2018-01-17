@@ -4,14 +4,14 @@ import 'whatwg-fetch';
 import { setTimeout } from 'timers';
 import { computed } from 'mobx';
 import { Product, StockInfo } from '../../common/Interfaces';
-
+import * as network from '../lib/network';
 
 interface ProductCount {
   count: number;
   product: Product;
 }
 
-async function _loadStock(productIds: string[], fetchQueryFn): Promise<StockInfo> {
+async function _loadStock(productIds: string[]): Promise<StockInfo> {
   const formattedProductIds = productIds.map(pId => `"${pId}"`);
   const query = `
     query {
@@ -32,7 +32,7 @@ async function _loadStock(productIds: string[], fetchQueryFn): Promise<StockInfo
       }
     }
   `;
-  const res = await fetchQueryFn(query);
+  const res = await network.fetchQuery(query);
   return res.stockMatrix;
 }
 
@@ -61,64 +61,36 @@ function _genStockMatrix(stock: StockInfo) {
   };
 }
 
+async function _loadTypeaheadProducts(partialName: string): Promise<Product[]> {
+  if (partialName === '') {
+    return [];
+  }
+  const query = `
+    query {
+      productsTypeahead(partialName: "${partialName}") {
+        _id,
+        name,
+        description,
+        code,
+        imageURL
+      }
+    }
+  `;
+  const res = await network.fetchQuery(query);
+  return res.productsTypeahead;
+}
+
 export class Store {
 
-  fetchQuery: (query: string) => Promise<any>;
   @observable router;
-  @observable productsFromSearch: Array<Product> = [];
+  @observable productsFromSearch: Product[] = [];
   @observable cart: Map<string, ProductCount>;
   stockMatrix: any;
   selectedProduct: Product;
   searchTimeout: any;
 
-  constructor(fetchQueryFn: (query: string) => Promise<any>) {
-    this.fetchQuery = fetchQueryFn;
+  constructor() {
     this.cart = new Map();
-  }
-
-  async _loadTypeaheadProducts(partialName: string) {
-    if (partialName === '') {
-      this.productsFromSearch = [];
-    } else {
-      const query = `
-        query {
-          productsTypeahead(partialName: "${partialName}") {
-            _id,
-            name,
-            description,
-            code,
-            imageURL
-          }
-        }
-      `;
-      const res = await this.fetchQuery(query);
-      this.productsFromSearch = res.productsTypeahead;
-    }
-  }
-
-  async _loadStockMatrix() {
-    const productIds = this.getCartAsArray.map(pc => `"${pc.product._id}"`);
-    const query = `
-      query {
-        stockMatrix(productIds: [${productIds.join(', ')}]) {
-          stockItems {
-            product,
-            dental,
-            price
-          },
-          products {
-            _id,
-            name
-          },
-          dentals {
-            _id,
-            name
-          }
-        }
-      }
-    `;
-    const res = await this.fetchQuery(query);
-    console.log(JSON.stringify(res, null, 2));
   }
 
   getProductCount(productId: string): number {
@@ -131,11 +103,8 @@ export class Store {
     return Array.from(this.cart.values());
   }
 
-  onSearchValueChange(event) {
-    const TIMEOUT = 400;
-    clearTimeout(this.searchTimeout);
-    this.searchTimeout =
-      setTimeout(this._loadTypeaheadProducts.bind(this, event.target.value), TIMEOUT);
+  async onSearchValueChange(partialName: string) {
+    this.productsFromSearch = await _loadTypeaheadProducts(partialName);
   }
 
   onProductSelected(selectedProduct) {
@@ -150,31 +119,10 @@ export class Store {
 
   async onMatrixPageDisplay() {
     const productIds = this.getCartAsArray.map(pc => pc.product._id);
-    const stock = await _loadStock(productIds, this.fetchQuery);
+    const stock = await _loadStock(productIds);
     this.stockMatrix = _genStockMatrix(stock);
   }
 
 }
 
-async function fetchQuery(query: String): Promise<any> {
-  try {
-    const res = await fetch('/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({ query }),
-    });
-    const json = await res.json();
-    if(json.errors) {
-      throw new Error(JSON.stringify(json.errors));
-    }
-    return json.data;
-  } catch (err) {
-    console.error(err);
-    throw new Error(JSON.stringify(err));
-  }
-}
-
-export let store = new Store(fetchQuery);
+export let store = new Store();
