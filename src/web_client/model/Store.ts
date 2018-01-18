@@ -99,7 +99,7 @@ export class Store {
   @observable productsFromSearch: Product[] = [];
   @observable cart: Map<string, ProductCount>;
   @observable dentalOfProduct: Map<string, string>;
-  stockMatrix: StockMatrix;
+  @observable stockMatrix: StockMatrix;
   selectedProduct: Product;
   searchTimeout: any;
 
@@ -127,9 +127,13 @@ export class Store {
   }
 
   onProductCountChanged(product: Product, count: number) {
-    const productCount = this.cart.get(product._id) || { product, count };
-    productCount.count = count;
-    this.cart.set(product._id, productCount);
+    if (count === 0) {
+      this.cart.delete(product._id);
+    } else {
+      const productCount = this.cart.get(product._id) || { product, count };
+      productCount.count = count;
+      this.cart.set(product._id, productCount);
+    }
   }
 
   async onMatrixPageDisplay() {

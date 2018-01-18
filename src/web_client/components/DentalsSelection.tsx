@@ -4,6 +4,7 @@ import { Store } from '../model/Store';
 import Paper from 'material-ui/Paper';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import { withStyles } from 'material-ui/styles';
+import * as _ from 'lodash';
 
 const styles = theme => ({
   root: {
@@ -23,18 +24,35 @@ interface IProps {
 
 @observer
 class DentalsSelection extends React.Component<IProps> {
+
+  componentDidMount() {
+    this.props.store.onMatrixPageDisplay();
+  }
+
   render() {
     const { store, classes } = this.props;
 
-    const headerColumns = store.stockMatrix.dentals.map((dental) => {
+    if (!store.stockMatrix) {
+      return <div/>;
+    }
+
+    const dentalColumns = store.stockMatrix.dentals.map((dental) => {
       return (<TableCell numeric key={dental._id} >{ dental.name }</TableCell>);
     });
+    const headerColumns = [
+      <TableCell key='product' >Produto</TableCell>,
+      ...dentalColumns,
+    ];
 
     const productColumns = store.stockMatrix.products.map((product) => {
       const productRow = product.productPrices.map((pp) => {
-        return <TableCell numeric>{pp}</TableCell>;
+        const formattedValue = _.isUndefined(pp) ? '-' : pp.toFixed(2);
+        return <TableCell numeric>{formattedValue}</TableCell>;
       });
-      return <TableRow key={product.id}>{ productRow }</TableRow>;
+      return <TableRow key={product.id}>
+        <TableCell>{ product.name }</TableCell>
+        { productRow }
+      </TableRow>;
     });
 
     return (

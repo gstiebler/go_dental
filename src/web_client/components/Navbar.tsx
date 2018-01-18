@@ -23,22 +23,30 @@ const styles = {
   },
 };
 
-function Navbar(props) {
-  const { store, classes } = props;
-  return (
-    <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Toolbar>
-          <Typography type="title" color="inherit">
-            GoDental
-          </Typography>
-          <Button onClick={ () => { store.router.goTo(views.home, {}, store); } }>Home</Button>
-          <Button onClick={ () => { store.router.goTo(views.search, {}, store); } }>Busca</Button>
-
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+interface IProps {
+  store: Store;
+  classes?: any;
+}
+@observer
+class Navbar extends React.Component<IProps> {
+  render() {
+    const { classes, store } = this.props;
+    return (
+      <div className={classes.root}>
+        <AppBar position="static" color="default">
+          <Toolbar>
+            <Typography type="title" color="inherit">
+              GoDental
+            </Typography>
+            <Button onClick={ () => { store.router.goTo(views.home, {}, store); } }>Home</Button>
+            <Button onClick={ () => { store.router.goTo(views.search, {}, store); } }>Busca</Button>
+            <Button onClick={ () => { store.router.goTo(views.dentalsSelection, {}, store); } }>Carrinho ({store.getCartAsArray.length})</Button>
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
+  }
 }
 
-export default observer(withStyles(styles)(Navbar));
+const temp = (props: IProps) => <Navbar {...props} />;
+export default observer(withStyles(styles)(temp));
