@@ -124,7 +124,6 @@ export class Store {
 
   onProductSelected(selectedProduct) {
     this.selectedProduct = selectedProduct;
-    // this.router.goTo(views.productDetails, {}, this);
   }
 
   onProductCountChanged(product: Product, count: number) {

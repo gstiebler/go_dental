@@ -24,6 +24,11 @@ interface IProps {
   classes?: any;
 }
 
+function onProductSelected(product, store) {
+  store.onProductSelected(product);
+  store.router.goTo(views.productDetails, {}, store);
+}
+
 function ProductCard(props: IProps) {
   const { product, goTo, classes, store } = props;
   return (
@@ -42,7 +47,7 @@ function ProductCard(props: IProps) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button dense color="primary" onClick={ () => store.onProductSelected(product) }>
+        <Button dense color="primary" onClick={ onProductSelected.bind(null, product, store) }>
           Detalhes
         </Button>
       </CardActions>
