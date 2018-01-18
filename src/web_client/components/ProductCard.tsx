@@ -5,6 +5,7 @@ import Button from 'material-ui/Button';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import { withStyles } from 'material-ui/styles';
 import { Product } from '../../common/Interfaces';
+import { Store } from '../model/Store';
 
 const styles = {
   card: {
@@ -19,11 +20,12 @@ const styles = {
 interface IProps {
   product: Product;
   goTo: () => any;
+  store: Store;
   classes?: any;
 }
 
 function ProductCard(props: IProps) {
-  const { product, goTo, classes } = props;
+  const { product, goTo, classes, store } = props;
   return (
     <Card className={classes.card}>
       <CardMedia
@@ -40,7 +42,7 @@ function ProductCard(props: IProps) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button dense color="primary">
+        <Button dense color="primary" onClick={ () => store.onProductSelected(product) }>
           Detalhes
         </Button>
       </CardActions>

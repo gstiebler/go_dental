@@ -17,10 +17,10 @@ interface StockInfo {
     _id: string;
     name: string;
   }];
-  dentals: [{
+  dentals: {
     _id: string;
     name: string;
-  }];
+  }[];
   stockItems: [{
     product: string;
     dental: string;

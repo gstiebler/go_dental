@@ -5,10 +5,23 @@ import { setTimeout } from 'timers';
 import { computed } from 'mobx';
 import { Product, StockInfo } from '../../common/Interfaces';
 import * as network from '../lib/network';
+import views from '../model/Views';
 
 interface ProductCount {
   count: number;
   product: Product;
+}
+
+interface StockMatrix {
+  dentals: {
+    _id: string;
+    name: string;
+  }[];
+  products: {
+    id: string;
+    name: string;
+    productPrices: number[];
+  }[];
 }
 
 async function _loadStock(productIds: string[]): Promise<StockInfo> {
@@ -36,7 +49,7 @@ async function _loadStock(productIds: string[]): Promise<StockInfo> {
   return res.stockMatrix;
 }
 
-function _genStockMatrix(stock: StockInfo) {
+function _genStockMatrix(stock: StockInfo): StockMatrix {
   const stockMap: Map<string, number> = new Map();
   for (const stockItem of stock.stockItems) {
     const mapKey = `${stockItem.dental}-${stockItem.product}`;
@@ -85,12 +98,14 @@ export class Store {
   @observable router;
   @observable productsFromSearch: Product[] = [];
   @observable cart: Map<string, ProductCount>;
-  stockMatrix: any;
+  @observable dentalOfProduct: Map<string, string>;
+  stockMatrix: StockMatrix;
   selectedProduct: Product;
   searchTimeout: any;
 
   constructor() {
     this.cart = new Map();
+    this.dentalOfProduct = new Map();
   }
 
   getProductCount(productId: string): number {
@@ -109,6 +124,7 @@ export class Store {
 
   onProductSelected(selectedProduct) {
     this.selectedProduct = selectedProduct;
+    // this.router.goTo(views.productDetails, {}, this);
   }
 
   onProductCountChanged(product: Product, count: number) {
@@ -121,6 +137,10 @@ export class Store {
     const productIds = this.getCartAsArray.map(pc => pc.product._id);
     const stock = await _loadStock(productIds);
     this.stockMatrix = _genStockMatrix(stock);
+  }
+
+  async onDentalOfProductSelected(productId: string, dentalId: string) {
+    this.dentalOfProduct.set(productId, dentalId);
   }
 
 }

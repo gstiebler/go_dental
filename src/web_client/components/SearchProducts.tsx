@@ -48,7 +48,9 @@ class SearchProducts extends React.Component<IProps> {
         <Grid container justify='flex-start' spacing={SPACING} >
           { store.productsFromSearch.map(product => (
             <Grid key={product.code} item>
-              <ProductCard product={ product } goTo={ goTo } />
+              <ProductCard product={ product }
+                           goTo={ goTo }
+                           store={ store } />
             </Grid>
           ))}
         </Grid>
