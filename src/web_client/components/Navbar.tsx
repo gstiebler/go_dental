@@ -32,18 +32,16 @@ class Navbar extends React.Component<IProps> {
   render() {
     const { classes, store } = this.props;
     return (
-      <div className={classes.root}>
-        <AppBar position="static" color="default">
-          <Toolbar>
-            <Typography type="title" color="inherit">
-              GoDental
-            </Typography>
-            <Button onClick={ () => { store.router.goTo(views.home, {}, store); } }>Home</Button>
-            <Button onClick={ () => { store.router.goTo(views.search, {}, store); } }>Busca</Button>
-            <Button onClick={ () => { store.router.goTo(views.dentalsSelection, {}, store); } }>Carrinho ({store.getCartAsArray.length})</Button>
-          </Toolbar>
-        </AppBar>
-      </div>
+      <AppBar className={classes.root} position="static" color="default">
+        <Toolbar>
+          <Typography type="title" color="inherit">
+            GoDental
+          </Typography>
+          <Button onClick={ () => { store.router.goTo(views.home, {}, store); } }>Home</Button>
+          <Button onClick={ () => { store.router.goTo(views.search, {}, store); } }>Busca</Button>
+          <Button onClick={ () => { store.router.goTo(views.dentalsSelection, {}, store); } }>Carrinho ({store.getCartAsArray.length})</Button>
+        </Toolbar>
+      </AppBar>
     );
   }
 }
