@@ -2,6 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Store } from '../model/Store';
 import Paper from 'material-ui/Paper';
+import Checkbox from 'material-ui/Checkbox';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import { withStyles } from 'material-ui/styles';
 import * as _ from 'lodash';
@@ -21,6 +22,9 @@ interface IProps {
   classes?: any;
 }
 
+function onCheckboxClicked(store: Store, productId: string, dentalId: string, checked: boolean) {
+  store.onDentalOfProductSelected(productId, dentalId);
+}
 
 @observer
 class DentalsSelection extends React.Component<IProps> {
@@ -45,10 +49,21 @@ class DentalsSelection extends React.Component<IProps> {
     ];
 
     const productColumns = store.stockMatrix.products.map((product) => {
-      const productRow = product.productPrices.map((pp) => {
+      const productRow = [];
+      for (let i = 0; i < product.productPrices.length; i++) {
+        const pp = product.productPrices[i];
+        const dental = store.stockMatrix.dentals[i];
+        const cbChecked = store.dentalOfProduct.get(product.id) === dental._id;
         const formattedValue = _.isUndefined(pp) ? '-' : pp.toFixed(2);
-        return <TableCell numeric>{formattedValue}</TableCell>;
-      });
+        productRow.push(
+          <TableCell numeric>
+            {formattedValue}
+            <Checkbox checked={ cbChecked } 
+                      onChange={ (event: object, checked: boolean) => onCheckboxClicked(store, product.id, dental._id, checked) } 
+            />
+          </TableCell>
+        );
+      }
       return <TableRow key={product.id}>
         <TableCell>{ product.name }</TableCell>
         { productRow }
