@@ -57,7 +57,8 @@ describe('product', () => {
     expect(store.stockMatrix.products[0].name).to.equal('Broca grande');
     expect(store.stockMatrix.products[1].name).to.equal('Broca média');
     expect(store.stockMatrix.products[2].name).to.equal('Broca pequena');
-    expect(store.stockMatrix.products[2].productPrices).to.eql([500, 1000, 2000]);
+    const prices = [...store.stockMatrix.products[2].productPrices];
+    expect(prices).to.eql([500, 1000, 2000]);
   });
 
 });

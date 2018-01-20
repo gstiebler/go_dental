@@ -31,7 +31,7 @@ class DentalsSelection extends React.Component<IProps> {
 
   componentDidMount() {
     this.props.store.onMatrixPageDisplay();
-  }
+  } 
 
   render() {
     const { store, classes } = this.props;
@@ -53,7 +53,7 @@ class DentalsSelection extends React.Component<IProps> {
       for (let i = 0; i < product.productPrices.length; i++) {
         const pp = product.productPrices[i];
         const dental = store.stockMatrix.dentals[i];
-        const cbChecked = store.dentalOfProduct.get(product.id) === dental._id;
+        const cbChecked = store.cart.get(product.id).dentalId === dental._id;
         const formattedValue = _.isUndefined(pp) ? '-' : pp.toFixed(2);
         productRow.push(
           <TableCell numeric>

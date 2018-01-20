@@ -7,9 +7,13 @@ import { Product, StockInfo } from '../../common/Interfaces';
 import * as network from '../lib/network';
 import views from '../model/Views';
 
-interface ProductCount {
-  count: number;
+
+type ProductId = string;
+
+interface CartItem {
   product: Product;
+  count: number;
+  dentalId?: string;
 }
 
 interface StockMatrix {
@@ -97,15 +101,13 @@ export class Store {
 
   @observable router;
   @observable productsFromSearch: Product[] = [];
-  @observable cart: Map<string, ProductCount>;
-  @observable dentalOfProduct: Map<string, string>;
+  @observable cart: Map<ProductId, CartItem>;
   @observable stockMatrix: StockMatrix;
   selectedProduct: Product;
   searchTimeout: any;
 
   constructor() {
     this.cart = new Map();
-    this.dentalOfProduct = new Map();
   }
 
   getProductCount(productId: string): number {
@@ -114,7 +116,7 @@ export class Store {
   }
 
   @computed
-  get getCartAsArray(): ProductCount[] {
+  get getCartAsArray(): CartItem[] {
     return Array.from(this.cart.values());
   }
 
@@ -130,9 +132,9 @@ export class Store {
     if (count === 0) {
       this.cart.delete(product._id);
     } else {
-      const productCount = this.cart.get(product._id) || { product, count };
-      productCount.count = count;
-      this.cart.set(product._id, productCount);
+      const cartItem = this.cart.get(product._id) || { product, count };
+      cartItem.count = count;
+      this.cart.set(product._id, cartItem);
     }
   }
 
@@ -143,7 +145,7 @@ export class Store {
   }
 
   async onDentalOfProductSelected(productId: string, dentalId: string) {
-    this.dentalOfProduct.set(productId, dentalId);
+    this.cart.get(productId).dentalId = dentalId;
   }
 
 }
