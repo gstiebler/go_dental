@@ -31,7 +31,7 @@ class DentalsSelection extends React.Component<IProps> {
 
   componentDidMount() {
     this.props.store.onMatrixPageDisplay();
-  } 
+  }
 
   render() {
     const { store, classes } = this.props;
@@ -58,8 +58,8 @@ class DentalsSelection extends React.Component<IProps> {
         productRow.push(
           <TableCell numeric>
             {formattedValue}
-            <Checkbox checked={ cbChecked } 
-                      onChange={ (event: object, checked: boolean) => onCheckboxClicked(store, product.id, dental._id, checked) } 
+            <Checkbox checked={ cbChecked }
+                      onChange={ (event: object, checked: boolean) => onCheckboxClicked(store, product.id, dental._id, checked) }
             />
           </TableCell>
         );

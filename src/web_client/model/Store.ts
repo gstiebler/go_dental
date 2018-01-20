@@ -7,13 +7,17 @@ import { Product, StockInfo } from '../../common/Interfaces';
 import * as network from '../lib/network';
 import views from '../model/Views';
 
+function objToGrahqlStr(obj: any): string {
+  const str = JSON.stringify(obj);
+  return str.replace(/\"([^(\")"]+)\":/g, "$1:");
+}
 
 type ProductId = string;
 
 interface CartItem {
   product: Product;
-  count: number;
-  dentalId?: string;
+  qty: number;
+  dentalId: string;
 }
 
 interface StockMatrix {
@@ -26,6 +30,13 @@ interface StockMatrix {
     name: string;
     productPrices: number[];
   }[];
+}
+
+interface OrderDetail {
+  productId: ProductId;
+  dentalId: string;
+  qty: number;
+  price: number;
 }
 
 async function _loadStock(productIds: string[]): Promise<StockInfo> {
@@ -97,6 +108,17 @@ async function _loadTypeaheadProducts(partialName: string): Promise<Product[]> {
   return res.productsTypeahead;
 }
 
+async function sendOrder(userId: string, orderDetails: OrderDetail[]) {
+  const orderDetailsStr = objToGrahqlStr(orderDetails);
+  const mutationQuery = `
+    mutation {
+      newOrder(userId: "${userId}", orderDetails: ${orderDetailsStr})
+    }
+  `;
+  const res = await network.fetchQuery(mutationQuery);
+  return res;
+}
+
 export class Store {
 
   @observable router;
@@ -110,9 +132,9 @@ export class Store {
     this.cart = new Map();
   }
 
-  getProductCount(productId: string): number {
-    const productCount = this.cart.get(productId);
-    return productCount ? productCount.count : 0;
+  getProductQty(productId: string): number {
+    const productQty = this.cart.get(productId);
+    return productQty ? productQty.qty : 0;
   }
 
   @computed
@@ -128,12 +150,12 @@ export class Store {
     this.selectedProduct = selectedProduct;
   }
 
-  onProductCountChanged(product: Product, count: number) {
-    if (count === 0) {
+  onProductQtyChanged(product: Product, qty: number) {
+    if (qty === 0) {
       this.cart.delete(product._id);
     } else {
-      const cartItem = this.cart.get(product._id) || { product, count };
-      cartItem.count = count;
+      const cartItem = this.cart.get(product._id) || { product, qty, dentalId: '' };
+      cartItem.qty = qty;
       this.cart.set(product._id, cartItem);
     }
   }
@@ -146,6 +168,21 @@ export class Store {
 
   async onDentalOfProductSelected(productId: string, dentalId: string) {
     this.cart.get(productId).dentalId = dentalId;
+  }
+
+  async onOrderRequested() {
+    const orderDetails:OrderDetail[] = this.getCartAsArray.map((cartItem) => {
+      const dentalIndex = this.stockMatrix.dentals.findIndex(d => d._id === cartItem.dentalId);
+      const product = this.stockMatrix.products.find(p => p.id === cartItem.product._id);
+      const price = product.productPrices[dentalIndex];
+      return {
+        productId: cartItem.product._id,
+        dentalId: cartItem.dentalId,
+        qty: cartItem.qty,
+        price,
+      };
+    });
+    await sendOrder('userID', orderDetails);
   }
 
 }

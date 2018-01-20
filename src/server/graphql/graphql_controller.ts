@@ -19,6 +19,12 @@ export const schema = new GraphQLSchema({
       ...ProductGQL.query,
     },
   }),
+  mutation: new GraphQLObjectType({
+    name: 'mutation',
+    fields: {
+      ...ProductGQL.mutations,
+    },
+  }),
 });
 
 export async function execGQLQuery(query: string) {

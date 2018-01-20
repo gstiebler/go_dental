@@ -23,13 +23,13 @@ interface IProps {
 
 function onCountChanged(store: Store, product: Product, event) {
   const value = Number(event.target.value);
-  store.onProductCountChanged(product, value);
+  store.onProductQtyChanged(product, value);
 }
 @observer
 class ProductDetails extends React.Component<IProps> {
   render() {
     const { classes, store } = this.props;
-    const value = store.getProductCount(store.selectedProduct._id);
+    const value = store.getProductQty(store.selectedProduct._id);
     return (
       <Paper>
         <img src={store.selectedProduct.imageURL} />

@@ -28,9 +28,9 @@ describe('product', () => {
       name: 'nomeProd1',
       code: 'cod1',
     };
-    store.onProductCountChanged(product, 3);
-    expect(store.getProductCount('id1')).to.equal(3);
-    expect(store.getProductCount('id2')).to.equal(0);
+    store.onProductQtyChanged(product, 3);
+    expect(store.getProductQty('id1')).to.equal(3);
+    expect(store.getProductQty('id2')).to.equal(0);
     expect(store.getCartAsArray).to.eql(
       [
         {
@@ -39,7 +39,8 @@ describe('product', () => {
             name: 'nomeProd1',
             code: 'cod1',
           },
-          count: 3,
+          qty: 3,
+          dentalId: '',
         },
       ],
     );
@@ -48,9 +49,9 @@ describe('product', () => {
   it('stock matrix', async () => {
     const store = new Store();
     await store.onSearchValueChange('broca');
-    store.onProductCountChanged(store.productsFromSearch[0], 3);
-    store.onProductCountChanged(store.productsFromSearch[1], 5);
-    store.onProductCountChanged(store.productsFromSearch[2], 7);
+    store.onProductQtyChanged(store.productsFromSearch[0], 3);
+    store.onProductQtyChanged(store.productsFromSearch[1], 5);
+    store.onProductQtyChanged(store.productsFromSearch[2], 7);
 
     await store.onMatrixPageDisplay();
     expect(store.stockMatrix.products).to.have.lengthOf(3);
@@ -60,5 +61,15 @@ describe('product', () => {
     const prices = [...store.stockMatrix.products[2].productPrices];
     expect(prices).to.eql([500, 1000, 2000]);
   });
+
+  it('send order', async () => {
+    const store = new Store();
+    await store.onSearchValueChange('broca');
+    store.onProductQtyChanged(store.productsFromSearch[2], 7);
+    await store.onMatrixPageDisplay();
+    store.onDentalOfProductSelected(store.stockMatrix.products[0].id, store.stockMatrix.dentals[0]._id);
+    const res = await store.onOrderRequested();
+    console.log(res);
+  })
 
 });

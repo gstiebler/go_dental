@@ -5,6 +5,7 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLFloat,
+  GraphQLInputObjectType,
 } from 'graphql';
 import * as ProductService from '../services/ProductService';
 
@@ -46,6 +47,16 @@ const stockMatrixType = new GraphQLObjectType({
   },
 });
 
+const newOrderInputType = new GraphQLInputObjectType({
+  name: 'newOrderInputType',
+  fields: {
+    productId: { type: GraphQLID },
+    dentalId: { type: GraphQLID },
+    qty: { type: GraphQLFloat },
+    price: { type: GraphQLFloat },
+  },
+});
+
 export const query = {
   productsTypeahead: {
     type: new GraphQLList(productType),
@@ -60,5 +71,16 @@ export const query = {
       productIds: { type: new GraphQLList(GraphQLID) },
     },
     resolve: ProductService.getStockMatrix,
+  },
+};
+
+export const mutations = {
+  newOrder: {
+    type: GraphQLString,
+    args: {
+      userId: { type: GraphQLID },
+      orderDetails: { type: new GraphQLList(newOrderInputType) },
+    },
+    resolve: ProductService.newOrder,
   },
 };
