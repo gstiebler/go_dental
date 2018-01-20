@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 import { DentalPayment } from './DentalPayment';
 import { UserPayment } from './UserPayment';
+import { Stock } from './Stock';
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const orderSchema = new mongoose.Schema({
@@ -22,23 +23,9 @@ export const Order = mongoose.model('Order', orderSchema);
 orderSchema.pre('save', async function(next){
   try {
     if(this.isNew) {
-      const perDental = amountPerDental(this.products);
-      let totalSum = 0.0;
-      perDental.forEach(async (dentalSum, dentalId) => {
-        const dentalPayment = new DentalPayment({
-          order: this,
-          amount: dentalSum,
-          status: 'PENDING',
-        });
-        await dentalPayment.save();
-        totalSum += dentalSum;
-      });
-      const userPayment = new UserPayment({
-        order: this,
-        amount: totalSum,
-        status: 'PENDING',
-      });
-      await userPayment.save();
+      await validate(this.products);
+      await createDentalPayments(this);
+      await createUserPayment(this);
     } else {
       throw new Error('Pedido não pode ser alterado');
     }
@@ -47,6 +34,44 @@ orderSchema.pre('save', async function(next){
     next(err);
   }
 });
+
+async function validate(products: any[]) {
+  for (const product of products) {
+    const stock: any = await Stock.find({
+      product: product.product,
+      dental: product.dental,
+    });
+    if (stock.qty < product.qty) {
+      throw new Error('quantidade inválida');
+    }
+    if (stock.price !== product.price) {
+      throw new Error('preço inválido');
+    }
+  }
+}
+
+async function createDentalPayments(order) {
+  const perDental = amountPerDental(order.products);
+  perDental.forEach(async (dentalSum, dentalId) => {
+    const dentalPayment = new DentalPayment({
+      order: order._id,
+      amount: dentalSum,
+      status: 'PENDING',
+    });
+    await dentalPayment.save();
+  });
+}
+
+async function createUserPayment(order) {
+  const totalsPerProduct: number[] = order.products.map(p => p.price * p.qty);
+  const totalSum = totalsPerProduct.reduce((p1, p2) => p1 + p2, 0);
+  const userPayment = new UserPayment({
+    order: order._id,
+    amount: totalSum,
+    status: 'PENDING',
+  });
+  await userPayment.save();
+}
 
 function amountPerDental(products): Map<string, number> {
   const perDental = new Map<string, number>();
