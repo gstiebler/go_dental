@@ -5,6 +5,7 @@ import {
   GraphQLString,
 } from 'graphql';
 import * as ProductGQL from './ProductGQL';
+import * as OrderGQL from './OrderGQL';
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -23,6 +24,7 @@ export const schema = new GraphQLSchema({
     name: 'mutation',
     fields: {
       ...ProductGQL.mutations,
+      ...OrderGQL.mutations,
     },
   }),
 });

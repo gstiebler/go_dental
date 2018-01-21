@@ -75,12 +75,4 @@ export const query = {
 };
 
 export const mutations = {
-  newOrder: {
-    type: GraphQLString,
-    args: {
-      userId: { type: GraphQLID },
-      orderDetails: { type: new GraphQLList(newOrderInputType) },
-    },
-    resolve: ProductService.newOrder,
-  },
 };

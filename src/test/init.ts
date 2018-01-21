@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose';
 import * as winston from 'winston';
 import * as dotenv from 'dotenv';
 import * as http from 'http';
+import * as _ from 'lodash';
 // import app from '../server/app';
 import { db } from '../server/db/init';
 import { execGQLQuery } from '../server/graphql/graphql_controller';
@@ -41,8 +42,8 @@ export async function createServer(): Promise<http.Server> {
 async function queryFn(query: string) {
   try {
     const res = await execGQLQuery(query);
-    if (res.data) {
-      return res.data
+    if (_.isEmpty(res.errors)) {
+      return res.data;
     } else {
       console.error(res.errors);
     }

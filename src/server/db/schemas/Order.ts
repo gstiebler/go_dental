@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import { DentalPayment } from './DentalPayment';
 import { UserPayment } from './UserPayment';
 import { Stock } from './Stock';
+import Promise from 'bluebird';
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const orderSchema = new mongoose.Schema({
@@ -24,6 +25,7 @@ orderSchema.pre('save', async function(next){
   try {
     if(this.isNew) {
       await validate(this.products);
+      await updateStock(this.products);
       await createDentalPayments(this);
       await createUserPayment(this);
     } else {
@@ -73,7 +75,7 @@ async function createUserPayment(order) {
   await userPayment.save();
 }
 
-function amountPerDental(products): Map<string, number> {
+function amountPerDental(products: any[]): Map<string, number> {
   const perDental = new Map<string, number>();
   for (const product of products) {
     const dentalStr = product.dental.toString();
@@ -82,4 +84,15 @@ function amountPerDental(products): Map<string, number> {
     perDental.set(dentalStr, dentalSum + totalPriceProduct);
   }
   return perDental;
+}
+
+function updateStock(products: any[]) {
+  return Promise.map(products, async (product) => {
+    const stock: any = await Stock.find({
+      product: product.product,
+      dental: product.dental,
+    });
+    stock.qty -= product.qty;
+    await stock.save();
+  });
 }

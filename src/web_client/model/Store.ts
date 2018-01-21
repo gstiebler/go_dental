@@ -180,6 +180,8 @@ export class Store {
         dentalId: cartItem.dentalId,
         qty: cartItem.qty,
         price,
+        name: cartItem.product.name,
+        description: cartItem.product.description,
       };
     });
     await sendOrder('userID', orderDetails);

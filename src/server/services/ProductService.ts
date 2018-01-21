@@ -37,8 +37,3 @@ export async function getStockMatrix(root, { productIds }) {
     stockItems,
   };
 }
-
-export async function newOrder(root, { userId, orderDetails }) {
-  console.log(orderDetails);
-  return 'OK';
-}
