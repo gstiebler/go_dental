@@ -3,6 +3,9 @@ import { User } from '../../server/db/schemas/User';
 import { Product } from '../../server/db/schemas/Product';
 import { Dental } from '../../server/db/schemas/Dental';
 import { Stock } from '../../server/db/schemas/Stock';
+import { Order } from '../../server/db/schemas/Order';
+import { DentalPayment } from '../../server/db/schemas/DentalPayment';
+import { UserPayment } from '../../server/db/schemas/UserPayment';
 import UserFixtures from './Users';
 import DentalFixtures from './DentalFixtures';
 import ProductFixtures from './ProductFixtures';
@@ -20,6 +23,9 @@ export async function initFixtures() {
   await Dental.remove({});
   await Product.remove({});
   await Stock.remove({});
+  await Order.remove({});
+  await DentalPayment.remove({});
+  await UserPayment.remove({});
 
   await User.insertMany(UserFixtures);
   await Dental.insertMany(await DentalFixtures());

@@ -1,4 +1,4 @@
-import { Order } from '../db/schemas/Order';
+import { Order, preSave } from '../db/schemas/Order';
 import { User } from '../db/schemas/User';
 import * as mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
@@ -17,6 +17,8 @@ export async function newOrder(root, { userId, orderDetails }) {
     user: user._id, // TODO userId
     products: orderDetails,
   });
+  await preSave(order);
   await order.save();
+  console.log('order saved');
   return 'OK';
 }

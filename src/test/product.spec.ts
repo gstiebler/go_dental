@@ -65,7 +65,7 @@ describe('product', () => {
   it('send order', async () => {
     const store = new Store();
     await store.onSearchValueChange('broca');
-    store.onProductQtyChanged(store.productsFromSearch[2], 7);
+    store.onProductQtyChanged(store.productsFromSearch[2], 2);
     await store.onMatrixPageDisplay();
     store.onDentalOfProductSelected(store.stockMatrix.products[0].id, store.stockMatrix.dentals[0]._id);
     const res = await store.onOrderRequested();

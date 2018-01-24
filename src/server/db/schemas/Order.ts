@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import { DentalPayment } from './DentalPayment';
 import { UserPayment } from './UserPayment';
 import { Stock } from './Stock';
-import Promise from 'bluebird';
+import * as Promise from 'bluebird';
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const orderSchema = new mongoose.Schema({
@@ -21,25 +21,30 @@ const orderSchema = new mongoose.Schema({
 
 export const Order = mongoose.model('Order', orderSchema);
 
-orderSchema.pre('save', async function(next){
-  try {
+orderSchema.pre('save', function() {
+  console.log('save');
+  /*try {
     if(this.isNew) {
-      await validate(this.products);
-      await updateStock(this.products);
-      await createDentalPayments(this);
-      await createUserPayment(this);
+      preSave(this)
     } else {
       throw new Error('Pedido não pode ser alterado');
     }
     next();
   } catch(err) {
     next(err);
-  }
+  }*/
 });
+
+export async function preSave(order) {
+  await validate(order.products);
+  await updateStock(order.products);
+  await createDentalPayments(order);
+  await createUserPayment(order);
+}
 
 async function validate(products: any[]) {
   for (const product of products) {
-    const stock: any = await Stock.find({
+    const stock: any = await Stock.findOne({
       product: product.product,
       dental: product.dental,
     });
@@ -47,7 +52,8 @@ async function validate(products: any[]) {
       throw new Error('quantidade inválida');
     }
     if (stock.price !== product.price) {
-      throw new Error('preço inválido');
+      console.log('stock: ' + stock);
+      throw new Error(`preço inválido: ${stock.price} e ${product.price}`);
     }
   }
 }
@@ -88,7 +94,7 @@ function amountPerDental(products: any[]): Map<string, number> {
 
 function updateStock(products: any[]) {
   return Promise.map(products, async (product) => {
-    const stock: any = await Stock.find({
+    const stock: any = await Stock.findOne({
       product: product.product,
       dental: product.dental,
     });
