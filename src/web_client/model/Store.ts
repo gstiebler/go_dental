@@ -185,6 +185,7 @@ export class Store {
       };
     });
     await sendOrder('userID', orderDetails);
+    this.cart = new Map();
   }
 
 }

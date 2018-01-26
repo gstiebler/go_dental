@@ -3,8 +3,10 @@ import { observer } from 'mobx-react';
 import { Store } from '../model/Store';
 import Paper from 'material-ui/Paper';
 import Checkbox from 'material-ui/Checkbox';
+import Button from 'material-ui/Button';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import { withStyles } from 'material-ui/styles';
+import views from '../model/Views';
 import * as _ from 'lodash';
 
 const styles = theme => ({
@@ -24,6 +26,11 @@ interface IProps {
 
 function onCheckboxClicked(store: Store, productId: string, dentalId: string, checked: boolean) {
   store.onDentalOfProductSelected(productId, dentalId);
+}
+
+async function sendOrder(store) {
+  await store.onOrderRequested();
+  store.router.goTo(views.home, {}, store);
 }
 
 @observer
@@ -50,10 +57,12 @@ class DentalsSelection extends React.Component<IProps> {
 
     const productColumns = store.stockMatrix.products.map((product) => {
       const productRow = [];
+      const cartItem = store.cart.get(product.id);
+      if (!cartItem) { return <div />; }
       for (let i = 0; i < product.productPrices.length; i++) {
         const pp = product.productPrices[i];
         const dental = store.stockMatrix.dentals[i];
-        const cbChecked = store.cart.get(product.id).dentalId === dental._id;
+        const cbChecked = cartItem.dentalId === dental._id;
         const formattedValue = _.isUndefined(pp) ? '-' : pp.toFixed(2);
         productRow.push(
           <TableCell numeric>
@@ -65,7 +74,7 @@ class DentalsSelection extends React.Component<IProps> {
         );
       }
       return <TableRow key={product.id}>
-        <TableCell>{ product.name }</TableCell>
+        <TableCell>{ product.name }({ cartItem.qty })</TableCell>
         { productRow }
       </TableRow>;
     });
@@ -82,6 +91,7 @@ class DentalsSelection extends React.Component<IProps> {
             { productColumns }
           </TableBody>
         </Table>
+        <Button onClick={ sendOrder.bind(null, store) }>Enviar</Button>
       </Paper>
     );
   }
