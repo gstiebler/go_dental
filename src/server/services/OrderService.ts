@@ -4,7 +4,6 @@ import * as mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
 export async function newOrder(root, { userId, orderDetails }) {
-  console.log(orderDetails);
   orderDetails = orderDetails.map((p) => {
     return {
       product: ObjectId(p.productId),

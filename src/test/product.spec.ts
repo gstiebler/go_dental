@@ -3,6 +3,9 @@ import { initFixtures } from './fixtures/init';
 import { execGQLQuery } from '../server/graphql/graphql_controller';
 import { Product } from '../common/Interfaces';
 import { Store } from '../web_client/model/Store';
+import { Order } from '../server/db/schemas/Order';
+import { UserPayment } from '../server/db/schemas/UserPayment';
+import { DentalPayment } from '../server/db/schemas/DentalPayment';
 
 describe('product', () => {
 
@@ -68,8 +71,14 @@ describe('product', () => {
     store.onProductQtyChanged(store.productsFromSearch[2], 2);
     await store.onMatrixPageDisplay();
     store.onDentalOfProductSelected(store.stockMatrix.products[0].id, store.stockMatrix.dentals[0]._id);
-    const res = await store.onOrderRequested();
-    console.log(res);
+    await store.onOrderRequested();
+    const orders: any[] = await Order.find();
+    const userPayments: any[] = await UserPayment.find();
+    const dentalPayments: any[] = await DentalPayment.find();
+    expect(userPayments[0].amount).equal(1000.0);
+    expect(dentalPayments[0].amount).equal(1000.0);
+    expect(orders[0].products[0].price).equal(500.0);
+    expect(orders[0].products[0].qty).equal(2);
   })
 
 });
