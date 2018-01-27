@@ -39,6 +39,10 @@ export async function createServer(): Promise<http.Server> {
 }
 */
 
+if (process.env.LOG_LEVEL) {
+  winston.default.transports.console.level = process.env.LOG_LEVEL;
+}
+
 async function queryFn(query: string) {
   try {
     const res = await execGQLQuery(query);

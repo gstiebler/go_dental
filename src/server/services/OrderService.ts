@@ -1,6 +1,7 @@
 import { Order, preSave } from '../db/schemas/Order';
 import { User } from '../db/schemas/User';
 import * as mongoose from 'mongoose';
+import * as log from 'winston';
 const ObjectId = mongoose.Types.ObjectId;
 
 export async function newOrder(root, { userId, orderDetails }) {
@@ -18,6 +19,6 @@ export async function newOrder(root, { userId, orderDetails }) {
   });
   await preSave(order);
   await order.save();
-  console.log('order saved');
+  log.debug('order saved');
   return 'OK';
 }

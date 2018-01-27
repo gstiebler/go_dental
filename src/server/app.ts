@@ -19,6 +19,10 @@ const HTTP_CODES = {
 // load environment variables from .env file in the root of the project (where package.json is)
 dotenv.config();
 
+if (process.env.LOG_LEVEL) {
+  winston.default.transports.console.level = process.env.LOG_LEVEL;
+}
+
 MongoInit.init({
   dbHost: process.env.MONGODB_HOST,
   dbName: process.env.MONGODB_DB_NAME,
