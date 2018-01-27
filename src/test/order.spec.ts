@@ -51,4 +51,14 @@ describe('order', () => {
     await expect(store.onOrderRequested()).to.be.rejectedWith();
   });
 
+  it('invalid price', async () => {
+    const store = new Store();
+    await store.onSearchValueChange('broca');
+    store.onProductQtyChanged(store.productsFromSearch[0], 5);
+    await store.onMatrixPageDisplay();
+    store.stockMatrix.products[0].productPrices[0] = 3.0; // invalid modification of the price
+    store.onDentalOfProductSelected(store.stockMatrix.products[0].id, store.stockMatrix.dentals[0]._id);
+    await expect(store.onOrderRequested()).to.be.rejectedWith();
+  });
+
 });

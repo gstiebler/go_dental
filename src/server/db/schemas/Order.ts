@@ -52,7 +52,6 @@ async function validate(products: any[]) {
       throw new Error(`quantidade inválida: ${stock.qty} < ${product.qty}`);
     }
     if (stock.price !== product.price) {
-      console.log('stock: ' + stock);
       throw new Error(`preço inválido: ${stock.price} e ${product.price}`);
     }
   }
