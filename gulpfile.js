@@ -32,7 +32,7 @@ gulp.task("lint", function () {
     .pipe(tslint.report());
 });
 
-gulp.task('test', ['transpile'], function () {
+gulp.task('test:nc', [], function () {
   process.env.NODE_ENV = 'TEST';
   const mochaOptions = {
     timeout: 50000,
@@ -53,6 +53,8 @@ gulp.task('test', ['transpile'], function () {
       console.log('Tests finished.');
     });
 });
+
+gulp.task('test', ['test:nc', 'transpile']);
 
 gulp.task("bundle:webapp", ['transpile'], function () {
   return browserify({
