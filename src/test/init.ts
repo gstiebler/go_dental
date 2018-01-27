@@ -8,7 +8,11 @@ import * as _ from 'lodash';
 import { db } from '../server/db/init';
 import { execGQLQuery } from '../server/graphql/graphql_controller';
 import * as sinon from 'sinon';
+import * as chaiAsPromised from 'chai-as-promised';
+import * as chai from 'chai';
 const network = require('../web_client/lib/network');
+
+chai.use(chaiAsPromised);
 
 // load environment variables from .env file in the root of the project (where package.json is)
 dotenv.config();
@@ -44,14 +48,9 @@ if (process.env.LOG_LEVEL) {
 }
 
 async function queryFn(query: string) {
-  try {
-    const res = await execGQLQuery(query);
-    if (_.isEmpty(res.errors)) {
-      return res.data;
-    } else {
-      console.error(res.errors);
-    }
-  } catch(error) {
-    console.error(error);
+  const res = await execGQLQuery(query);
+  if (_.isEmpty(res.errors)) {
+    return res.data;
   }
+  throw new Error(JSON.stringify(res.errors, null, 2));
 }

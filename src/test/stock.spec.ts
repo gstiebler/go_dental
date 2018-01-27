@@ -25,4 +25,9 @@ describe('stock', () => {
     expect(prices).to.eql([500, 1000, 2000]);
   });
 
+  it('asked qty greather than available', async () => {
+
+  });
+
+
 });

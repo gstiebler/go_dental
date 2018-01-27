@@ -4,6 +4,8 @@ import { Store } from '../web_client/model/Store';
 import { Order } from '../server/db/schemas/Order';
 import { UserPayment } from '../server/db/schemas/UserPayment';
 import { DentalPayment } from '../server/db/schemas/DentalPayment';
+import * as chaiAsPromised from 'chai-as-promised';
+import * as logger from 'winston';
 
 describe('order', () => {
 
@@ -38,6 +40,15 @@ describe('order', () => {
     expect(orders[0].products[0].qty).equal(5);
     expect(orders[0].products[1].qty).equal(3);
     expect(orders[0].products[2].qty).equal(2);
-  })
+  });
+
+  it('invalid qty', async () => {
+    const store = new Store();
+    await store.onSearchValueChange('broca');
+    store.onProductQtyChanged(store.productsFromSearch[0], 13);
+    await store.onMatrixPageDisplay();
+    store.onDentalOfProductSelected(store.stockMatrix.products[0].id, store.stockMatrix.dentals[0]._id);
+    await expect(store.onOrderRequested()).to.be.rejectedWith();
+  });
 
 });
