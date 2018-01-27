@@ -49,7 +49,7 @@ async function validate(products: any[]) {
       dental: product.dental,
     });
     if (stock.qty < product.qty) {
-      throw new Error('quantidade inválida');
+      throw new Error(`quantidade inválida: ${stock.qty} < ${product.qty}`);
     }
     if (stock.price !== product.price) {
       console.log('stock: ' + stock);

@@ -56,7 +56,19 @@ export default async () => {
       product: await idByValue(Product, 'name', 'Broca média'),
       dental: await idByValue(Dental, 'name', 'Dental 3'),
       qty: 20,
-      price: 5000.0,
+      price: 4900.0,
+    },
+    {
+      product: await idByValue(Product, 'name', 'Broca grande'),
+      dental: await idByValue(Dental, 'name', 'Dental 1'),
+      qty: 17,
+      price: 2803.0,
+    },
+    {
+      product: await idByValue(Product, 'name', 'Broca grande'),
+      dental: await idByValue(Dental, 'name', 'Dental 3'),
+      qty: 42,
+      price: 3294.0,
     },
   ];
 }
