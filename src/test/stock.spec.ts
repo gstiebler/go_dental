@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { initFixtures } from './fixtures/init';
-import { execGQLQuery } from '../server/graphql/graphql_controller';
 import { Store } from '../web_client/model/Store';
 import { Order } from '../server/db/schemas/Order';
 
