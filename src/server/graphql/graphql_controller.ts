@@ -6,6 +6,7 @@ import {
 } from 'graphql';
 import * as ProductGQL from './ProductGQL';
 import * as OrderGQL from './OrderGQL';
+import * as StockGQL from './StockGQL';
 
 export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -18,6 +19,7 @@ export const schema = new GraphQLSchema({
         },
       },
       ...ProductGQL.query,
+      ...StockGQL.query,
     },
   }),
   mutation: new GraphQLObjectType({

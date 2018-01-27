@@ -1,6 +1,5 @@
 import { Product } from '../db/schemas/Product';
 import { Dental } from '../db/schemas/Dental';
-import { Stock } from '../db/schemas/Stock';
 import * as Interfaces from '../../common/Interfaces';
 
 export function getProjection (fieldASTs) {
@@ -22,18 +21,4 @@ export function productsTypeahead(root, { partialName }, source, fieldASTs) {
   return Product.find(query, projection)
     .sort({ name: 1 })
     .limit(NUM_MAX_PRODS);
-}
-
-export async function getStockMatrix(root, { productIds }) {
-  const products = await Product.find({ _id: { $in: productIds } }).sort({ name: 1 });
-  const dentals = await Dental.find().sort({ name: 1 });
-  const stockItems = await Stock.find({
-    product: { $in: productIds },
-    dental: { $in: dentals.map(d => d._id) },
-  });
-  return {
-    products,
-    dentals,
-    stockItems,
-  };
 }
