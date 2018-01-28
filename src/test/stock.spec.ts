@@ -36,5 +36,4 @@ describe('stock', () => {
     expect(prices).to.eql([undefined, undefined, 3294]);
   });
 
-
 });

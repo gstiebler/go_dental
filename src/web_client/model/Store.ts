@@ -6,6 +6,7 @@ import { computed } from 'mobx';
 import { Product, StockInfo } from '../../common/Interfaces';
 import * as network from '../lib/network';
 import views from '../model/Views';
+import * as _ from 'lodash';
 
 function objToGrahqlStr(obj: any): string {
   const str = JSON.stringify(obj);
@@ -178,7 +179,8 @@ export class Store {
   }
 
   async onOrderRequested() {
-    const orderDetails:OrderDetail[] = this.getCartAsArray.map((cartItem) => {
+    const selectedProducts = this.getCartAsArray.filter(cartItem => !_.isEmpty(cartItem.dentalId));
+    const orderDetails:OrderDetail[] = selectedProducts.map((cartItem) => {
       const dentalIndex = this.stockMatrix.dentals.findIndex(d => d._id === cartItem.dentalId);
       const product = this.stockMatrix.products.find(p => p.id === cartItem.product._id);
       const price = product.productPrices[dentalIndex];

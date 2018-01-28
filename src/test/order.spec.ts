@@ -9,7 +9,7 @@ import * as logger from 'winston';
 
 describe('order', () => {
 
-  before(async () => {
+  beforeEach(async () => {
     await initFixtures();
   });
 
@@ -45,7 +45,7 @@ describe('order', () => {
   it('invalid qty', async () => {
     const store = new Store();
     await store.onSearchValueChange('broca');
-    store.onProductQtyChanged(store.productsFromSearch[0], 13);
+    store.onProductQtyChanged(store.productsFromSearch[0], 500);
     await store.onMatrixPageDisplay();
     store.onDentalOfProductSelected(store.stockMatrix.products[0].id, store.stockMatrix.dentals[0]._id);
     await expect(store.onOrderRequested()).to.be.rejectedWith();
@@ -59,6 +59,19 @@ describe('order', () => {
     store.stockMatrix.products[0].productPrices[0] = 3.0; // invalid modification of the price
     store.onDentalOfProductSelected(store.stockMatrix.products[0].id, store.stockMatrix.dentals[0]._id);
     await expect(store.onOrderRequested()).to.be.rejectedWith();
+  });
+
+  it('not selecting all items', async () => {
+    const store = new Store();
+    await store.onSearchValueChange('broca');
+    store.onProductQtyChanged(store.productsFromSearch[0], 5);
+    store.onProductQtyChanged(store.productsFromSearch[1], 3);
+    store.onProductQtyChanged(store.productsFromSearch[2], 2);
+    await store.onMatrixPageDisplay();
+    store.onDentalOfProductSelected(store.stockMatrix.products[1].id, store.stockMatrix.dentals[2]._id); // 3 * 4.900 = 14.700
+    await store.onOrderRequested();
+    const orders: any[] = await Order.find();
+    expect(orders[0].products).to.have.lengthOf(1);
   });
 
 });
