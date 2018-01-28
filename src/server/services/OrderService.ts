@@ -5,13 +5,11 @@ import * as log from 'winston';
 const ObjectId = mongoose.Types.ObjectId;
 
 export async function newOrder(root, { userId, orderDetails }) {
-  orderDetails = orderDetails.map((p) => {
-    return {
-      product: ObjectId(p.productId),
-      dental: ObjectId(p.dentalId),
-      ...p,
-    };
-  });
+  orderDetails = orderDetails.map(p => ({
+    product: ObjectId(p.productId),
+    dental: ObjectId(p.dentalId),
+    ...p,
+  }));
   const user: any = User.findOne();
   const order = new Order({
     user: user._id, // TODO userId
@@ -19,6 +17,5 @@ export async function newOrder(root, { userId, orderDetails }) {
   });
   await preSave(order);
   await order.save();
-  log.debug('order saved');
   return 'OK';
 }

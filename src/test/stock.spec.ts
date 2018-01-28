@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { initFixtures } from './fixtures/init';
 import { Store } from '../web_client/model/Store';
 import { Order } from '../server/db/schemas/Order';
+import * as logger from 'winston';
 
 describe('stock', () => {
 
@@ -26,7 +27,13 @@ describe('stock', () => {
   });
 
   it('asked qty greather than available', async () => {
-
+    const store = new Store();
+    await store.onSearchValueChange('broca');
+    // dental 1 has only 17 items in stock
+    store.onProductQtyChanged(store.productsFromSearch[0], 20);
+    await store.onMatrixPageDisplay();
+    const prices = [...store.stockMatrix.products[0].productPrices];
+    expect(prices).to.eql([undefined, undefined, 3294]);
   });
 
 

@@ -28,11 +28,19 @@ const stockMatrixType = new GraphQLObjectType({
   },
 });
 
+const productQtyType = new GraphQLInputObjectType({
+  name: 'productQtyType',
+  fields: {
+    qty: { type: GraphQLFloat },
+    productId: { type: GraphQLID },
+  },
+});
+
 export const query = {
   stockMatrix: {
     type: stockMatrixType,
     args: {
-      productIds: { type: new GraphQLList(GraphQLID) },
+      products: { type: new GraphQLList(productQtyType) },
     },
     resolve: StockService.getStockMatrix,
   },

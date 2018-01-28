@@ -39,11 +39,15 @@ interface OrderDetail {
   price: number;
 }
 
-async function _loadStock(productIds: string[]): Promise<StockInfo> {
-  const formattedProductIds = productIds.map(pId => `"${pId}"`);
+interface IStockQuery {
+  productId: ProductId;
+  qty: number;
+}
+
+async function _loadStock(products: IStockQuery[]): Promise<StockInfo> {
   const query = `
     query {
-      stockMatrix(productIds: [${formattedProductIds.join(', ')}]) {
+      stockMatrix(products: ${objToGrahqlStr(products)}) {
         stockItems {
           product,
           dental,
@@ -161,8 +165,11 @@ export class Store {
   }
 
   async onMatrixPageDisplay() {
-    const productIds = this.getCartAsArray.map(pc => pc.product._id);
-    const stock = await _loadStock(productIds);
+    const products: IStockQuery[] = this.getCartAsArray.map(pc => ({
+      productId: pc.product._id,
+      qty: pc.qty,
+    }));
+    const stock = await _loadStock(products);
     this.stockMatrix = _genStockMatrix(stock);
   }
 
