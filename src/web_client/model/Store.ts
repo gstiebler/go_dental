@@ -1,8 +1,6 @@
 
-import { observable } from 'mobx';
-import 'whatwg-fetch';
+import { computed, observable } from 'mobx';
 import { setTimeout } from 'timers';
-import { computed } from 'mobx';
 import { Product, StockInfo } from '../../common/Interfaces';
 import * as network from '../lib/network';
 import views from '../model/Views';

@@ -9,7 +9,7 @@ export async function init({
       port,
     }) {
   mongoURL = `mongodb://${dbHost}:${port}/${dbName}`;
-  console.log('MongoDB URI: ' + mongoURL);
+  logger.info('MongoDB URI: ' + mongoURL);
   (<any>mongoose).Promise = global.Promise;
 
   await mongoose.disconnect();
@@ -19,7 +19,7 @@ export async function init({
   };
   try {
     db = await mongoose.connect(mongoURL, options);
-    console.log('Connected to MongoDB');
+    logger.info('Connected to MongoDB');
 
     /*
     mongoose.set( "debug", (coll, method, query, doc, options) => {

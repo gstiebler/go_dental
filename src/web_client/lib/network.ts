@@ -1,4 +1,6 @@
 
+import 'whatwg-fetch';
+
 export async function fetchQuery(query: String): Promise<any> {
   try {
     const res = await fetch('/graphql', {
