@@ -24,6 +24,8 @@ before(async () => {
     dbHost: process.env.MONGODB_HOST,
     dbName: process.env.MONGODB_TEST_DB_NAME,
     port: process.env.MONGODB_PORT,
+    user: process.env.MONGODB_USER,
+    pass: process.env.MONGODB_PW,
   });
 });
 

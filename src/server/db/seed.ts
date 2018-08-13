@@ -8,6 +8,8 @@ export async function seed() {
     dbHost: process.env.MONGODB_HOST,
     dbName: process.env.MONGODB_DB_NAME,
     port: process.env.MONGODB_PORT,
+    pass: '',
+    user: '',
   });
 
   await initFixtures();

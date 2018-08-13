@@ -7,15 +7,18 @@ export async function init({
       dbHost,
       dbName,
       port,
+      user,
+      pass,
     }) {
-  mongoURL = `mongodb://${dbHost}:${port}/${dbName}`;
+  mongoURL = `mongodb://${user}:${pass}@${dbHost}:${port}/${dbName}?ssl=true&replicaSet=GoDental-shard-0&authSource=admin&retryWrites=true`;
+  console.log(mongoURL);
   logger.info('MongoDB URI: ' + mongoURL);
   (<any>mongoose).Promise = global.Promise;
 
   await mongoose.disconnect();
 
   const options = {
-    useMongoClient: true,
+    useMongoClient: true
   };
   try {
     db = await mongoose.connect(mongoURL, options);
