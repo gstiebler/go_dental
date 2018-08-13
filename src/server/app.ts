@@ -27,8 +27,8 @@ MongoInit.init({
   dbHost: process.env.MONGODB_HOST,
   dbName: process.env.MONGODB_DB_NAME,
   port: process.env.MONGODB_PORT,
-  pass: '',
-  user: 'user'
+  user: process.env.MONGODB_USER,
+  pass: process.env.MONGODB_PW,
 });
 
 // import { router as routes } from './routes/index';
